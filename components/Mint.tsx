@@ -11,10 +11,12 @@ export const Mint: React.FC<{
 
   const updateMintCount = (value: number | undefined) => {
     if (typeof value === 'undefined') return;
-    if (value < 1) {
+    if (value < 1) { // Enforce lower bound
       setMintCount(1)
-    } else if (value > (tokenSupply-tokensMinted)) {
+    } else if (value > (tokenSupply-tokensMinted)) { // Enforce mint limit
       setMintCount(tokenSupply-tokensMinted)
+    } else if (value > 10) { // Enforce upper bound
+      setMintCount(10)
     } else {
       setMintCount(value)
     }

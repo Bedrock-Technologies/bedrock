@@ -106,7 +106,7 @@ export default function Index() {
               src='/img.png'
               height='300'
               width='300'
-              alt='BoredApe'
+              alt='Blurred room image'
             />
           </div>
 
