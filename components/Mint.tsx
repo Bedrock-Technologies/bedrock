@@ -15,8 +15,8 @@ export const Mint: React.FC<{
       setMintCount(1)
     } else if (value > (tokenSupply-tokensMinted)) { // Enforce mint limit
       setMintCount(tokenSupply-tokensMinted)
-    } else if (value > 10) { // Enforce upper bound
-      setMintCount(10)
+    // } else if (value > 10) { // Enforce upper bound
+    //   setMintCount(10)
     } else {
       setMintCount(value)
     }
