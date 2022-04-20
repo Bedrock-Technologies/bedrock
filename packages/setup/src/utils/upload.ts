@@ -8,8 +8,8 @@ import { ConnectedWallet } from '@terra-money/wallet-provider'
 import axios from 'axios'
 import { InitMsg } from './types'
 
-const MAINNET_CODE_ID = 4134
-const TESTNET_CODE_ID = 59089
+const MAINNET_CODE_ID = 4134 // BROKEN
+const TESTNET_CODE_ID = 58369 // BROKEN 59089
 
 export const createContract = async (
   wallet: ConnectedWallet,
@@ -46,7 +46,7 @@ export const createContract = async (
   const instantiate = new MsgInstantiateContract(
     wallet.walletAddress,
     wallet.walletAddress,
-    60782,//CODE_ID,
+    58369,//60782,//CODE_ID,
     {
       name: msg.name,
       symbol: msg.symbol,
