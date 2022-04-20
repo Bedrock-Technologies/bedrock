@@ -105,7 +105,7 @@ export default function Index() {
     style={{
       // backgroundImage: 'url(/background.png)',
       // backgroundSize: 'cover',
-      backgroundColor: 'black',
+      // backgroundColor: 'black',
       height: '100%',
       width: '100%'
     }}
