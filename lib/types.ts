@@ -4,8 +4,8 @@ export type EmptyProps = Record<string, unknown>
 // Cache
 
 export type CacheContent = {
-  assets: string[]
-  cid: string
+  assets: MintMsg[]
+  // cid: string
   contract_addr: string
   chain_id: string
   config: Config

@@ -37,10 +37,9 @@ export const upload = async (
   }
 
   // Upload files to IPFS
-  const { assets, cid } = await ipfsUpload(path, pinataKey, pinataSecret)
+  const { assets } = await ipfsUpload(path, pinataKey, pinataSecret)
 
   console.log('Asset upload complete')
-  console.log('IPFS CID:', cid)
   if (assets.length == 0) {
     throw new Error(
       'Asset folder must contain 1 or more correctly formatted assets.\n\
@@ -52,19 +51,19 @@ export const upload = async (
   saveCache(cacheName, env, cacheContent)
 
   // Load user creds
-  const terra = await getClient(env)
-  const key = encryptedToRawKey(pk, pass)
-  const wallet = terra.wallet(key)
+  // const terra = await getClient(env)
+  // const key = encryptedToRawKey(pk, pass)
+  // const wallet = terra.wallet(key)
 
-  // Create contract
-  const contract_address = await createContract(wallet, terra, config)
-  cacheContent.program = {
-    ...cacheContent.program,
-    contract_address: contract_address
-  }
-  saveCache(cacheName, env, cacheContent)
+  // // Create contract
+  // const contract_address = await createContract(wallet, terra, config)
+  // cacheContent.program = {
+  //   ...cacheContent.program,
+  //   contract_address: contract_address
+  // }
+  // saveCache(cacheName, env, cacheContent)
 
-  console.log('Contract created at', contract_address)
+  // console.log('Contract created at', contract_address)
 }
 
 const ipfsUpload = async (
@@ -84,39 +83,38 @@ const ipfsUpload = async (
   const images = new Set(files.filter((name) => !name.includes('.json')))
 
   // Upload in the format Storefront expects
-  let cid: string
-  try {
-    cid = (await pinata.pinFromFS(path.resolve(dirPath))).IpfsHash
-  } catch (error) {
-    throw error
-  }
   const assets: MintMsg[] = []
-
-  images.forEach((file, idx) => {
+  for (let file of Array.from(images)) {
     console.log(`Uploading ${file}...`)
-    const rootName = file.split('.')[0]
-    if (files.includes(rootName + '.json')) {
-      const contents = fs.readFileSync(
-        dirPath + '/' + rootName + '.json',
-        'utf8'
-      )
+    const roomNo = file.split('.')[0]
+    const cid = (await pinata.pinFileToIPFS(fs.createReadStream(path.resolve(`${dirPath}/${file}`)))).IpfsHash
+    for (let i=0; i<555; i++) {
+      const rootName = `${roomNo}-${i}`
       let msg: MintMsg = {
         token_id: rootName,
         owner: undefined,
         token_uri: undefined,
-        extension: JSON.parse(contents) as Metadata
-      }
-      if (msg.extension) {
-        msg.extension = {
-          ...msg.extension,
-          image: `https://ipfs.io/ipfs/${cid}/${file}`
-        }
+        extension: {
+          description: "Part of the Home Suite Home Collection",
+          name: `Room ${roomNo} - #${i}`,
+          image: "ipfs://" + cid,
+          attributes: [{ 
+            display_type: undefined,
+            trait_type:"Room #", 
+            value: roomNo
+          }],
+          animation_url: undefined,
+          background_color: undefined,
+          external_url: undefined,
+          image_data: undefined,
+          youtube_url: undefined
+        },  
       }
       assets.push(msg)
     }
-  })
+  }
 
-  return { assets, cid }
+  return { assets }
 }
 
 const createContract = async (

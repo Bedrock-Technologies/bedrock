@@ -7,7 +7,7 @@ export const Mint: React.FC<{
   tokensMinted: number,
   tokenSupply: number,
 }> = ({ disabled, mintCallback, mintCost, tokensMinted, tokenSupply }) => {
-  const [mintCount, setMintCount] = React.useState<number | undefined>()
+  const [mintCount, setMintCount] = React.useState<number>(1)
 
   const updateMintCount = (value: number | undefined) => {
     if (typeof value === 'undefined') return;
@@ -51,7 +51,7 @@ export const Mint: React.FC<{
                   textAlign: 'center'
                 }}
               >
-                { `${mintCost * (mintCount || 1)} Luna` }
+                { `${(mintCost * (mintCount || 1)).toPrecision(3)} Luna` }
               </span>
             </div>
             <button

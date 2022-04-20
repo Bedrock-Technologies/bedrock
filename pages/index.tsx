@@ -34,7 +34,7 @@ const loadMyTokens = async (lcd: LCDClient, owner: string, setter: any) => {
 
 export default function Index() {
   const { connect } = useWallet()
-  const [tokensLoaded, setTokensLoaded] = React.useState<number>(0)
+  const [tokensLoaded, setTokensLoaded] = React.useState<number | undefined>(undefined)
   const [myTokens, setMyTokens] = React.useState<string[]>([])
   const connectedWallet = useConnectedWallet()
 
@@ -56,9 +56,8 @@ export default function Index() {
   }, [connectedWallet])
 
   const handleClickMint = async (mintCount: number) => {
-
-    if (connectedWallet && tokensLoaded) {
-      const token_id = await toast.promise(
+    if (connectedWallet && typeof tokensLoaded !== 'undefined') {
+      const token_ids = await toast.promise(
         mint(connectedWallet, cacheContent as CacheContent, mintCount),
         {
           pending: "Minting token(s)...",
@@ -66,9 +65,11 @@ export default function Index() {
           error: "Could not mint token(s)"
         }
       )
-      console.log('Minted', token_id)
-      if (typeof token_id !== 'undefined') {
-        router.push(`/${token_id}`)
+      console.log('Minted', token_ids)
+
+      if (typeof token_ids !== 'undefined') {
+        setMyTokens(myTokens.concat(token_ids))
+        router.push(`/#my_tokens`)
       }
     }
   }
@@ -123,7 +124,7 @@ export default function Index() {
                 disabled={typeof tokensLoaded === 'undefined'}
                 mintCallback={handleClickMint} 
                 mintCost={parseFloat(cacheContent.config.price.amount)/1_000_000}
-                tokensMinted={tokensLoaded}
+                tokensMinted={tokensLoaded || 0}
                 tokenSupply={cacheContent.config.max_token_count}
               />
               { myTokens.length > 0 && <MyTokens tokensOwned={myTokens} /> }

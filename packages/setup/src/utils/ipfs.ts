@@ -1,20 +1,21 @@
 // import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 // import { concat as uint8ArrayConcat } from 'uint8arrays/concat'
 
+
 export const getFiles = async (cid: string) => {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ cid: cid, assets: generateAssets() })
+    body: JSON.stringify({})
   }
 
   return fetch('http://localhost:3001/saveCid', requestOptions)
 }
 
-const generateAssets = () => {
+const findAssets = () => {
   let result: string[] = [];
-  for (let i=1; i<10; i++) {
-    for (let j=1; j<556; j++) {
+  for (let i=1; i<1; i++) {
+    for (let j=1; j<1; j++) {
       result.push(`${i}-${j}.json`)
     }
   }

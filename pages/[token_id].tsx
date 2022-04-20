@@ -41,8 +41,8 @@ export default function Index() {
       <Image
         alt='nft logo'
         src={`/images/${roomNo}.png`}
-        height='300'
-        width='300'
+        height='400'
+        width='400'
         className={imageStyle}
       />
     )
@@ -58,11 +58,7 @@ export default function Index() {
       )
     }
 
-    return (
-      <>
-        <div style={{ height: 400, width: 400 }}>{renderImage()}</div>
-      </>
-    )
+    return <div className='my-6' style={{ height: 400, width: 400 }}>{renderImage()}</div>
   }
 
   useEffect(() => {
@@ -89,7 +85,7 @@ export default function Index() {
           console.log("Nft Info", nftInfo)
 
           // Mock NFT metadata
-
+          
 
           setNFTInfo(nftInfo)
         }
@@ -115,14 +111,16 @@ export default function Index() {
     }}
     >
       <div className='flex-grow bg-white max-w-xl max-h-xl w-max rounded-3xl shadow-2xl px-5 py-12'>
-        <div className='flex flex-col items-center justify-center space-y-4'>
-          <h2 className='font-bold text-3xl text-blue-700'>
-            {nftInfo?.extension?.name || 'NFT View Page'}
-          </h2>
+        <div className='flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center justify-center'>
+            <h2 className='font-bold text-3xl text-blue-700'>
+              {nftInfo?.extension?.name || 'NFT View Page'}
+            </h2>
 
-          <p className='text-base text-gray-700'>
-            {nftInfo?.extension?.description || ``}
-          </p>
+            <p className='text-base text-gray-700'>
+              {nftInfo?.extension?.description || ``}
+            </p>
+          </div>
 
           {status === WalletStatus.WALLET_NOT_CONNECTED && (
             <>
@@ -159,7 +157,7 @@ export default function Index() {
 
           {status === WalletStatus.WALLET_CONNECTED && render()}
           <button
-            className='inline-flex items-center px-6 py-3 border border-transparent text-xl font-medium rounded-2xl shadow-sm text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            className='items-center px-6 py-3 border border-transparent text-xl font-medium rounded-2xl shadow-sm text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
             onClick={() => router.push('/')}
           >
             Back to mint

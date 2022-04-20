@@ -37,7 +37,7 @@ export const mint = async (
 
   // Find which tokens have not been minted
   const newAssets = cacheContent.assets.filter(
-    (asset) => !tokens.includes(asset.split('.')[0])
+    (asset) => !tokens.includes(asset.token_id)
   )
 
   if (newAssets.length < count) {
@@ -50,29 +50,10 @@ export const mint = async (
 
   const execMsgs = []
   for (const i of indices) {
-    const assetRoot = newAssets[i].split('.')[0]
-    const roomSplit = assetRoot.split('-')
+    const msg = newAssets[i]
 
-    const extension: Metadata = {
-      image: `https://bedrock.mypinata.cloud/ipfs/${cacheContent.cid}/${assetRoot}.png`,
-      name: `Room ${roomSplit[0]}`,
-      description: `#${roomSplit[1]}`,
-      animation_url: undefined,
-      attributes: [ { trait_type: "Room #", value: `${roomSplit[0]}`, display_type: undefined } ],
-      background_color: undefined,
-      external_url: undefined,
-      image_data: undefined,
-      youtube_url: undefined,
-    }
-
-    const mintMsg: MintMsg = {
-      token_id: newAssets[i].split('.')[0],
-      owner: wallet.walletAddress,
-      token_uri: undefined,
-      extension: extension,
-    }
-
-    const execMsg = { mint: mintMsg }
+    msg.owner = wallet.walletAddress
+    const execMsg = { mint: msg }
     execMsgs.push(
       new MsgExecuteContract(
         wallet.walletAddress,
@@ -97,8 +78,14 @@ export const mint = async (
   const {
     wasm: { token_id }
   } = executeTxResult.logs[0].eventsByType
+  const ids = []
+  for (let log of executeTxResult.logs) {
+    if (log.eventsByType.wasm?.token_id) {
+      ids.push(log.eventsByType.wasm.token_id[0])
+    }
+  }
 
-  return token_id[0]
+  return ids
 }
 
 const getIPFSContents = async (path: string) => {
