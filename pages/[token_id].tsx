@@ -113,7 +113,7 @@ export default function Index() {
       <div className='flex-grow bg-white max-w-xl max-h-xl w-max rounded-3xl shadow-2xl px-5 py-12'>
         <div className='flex flex-col items-center justify-center'>
           <div className='flex flex-col items-center justify-center'>
-            <h2 className='font-bold text-3xl text-blue-700'>
+            <h2 className='text-center text-3xl font-extrabold text-gray-900 sm:text-4xl'>
               {nftInfo?.extension?.name || 'NFT View Page'}
             </h2>
 
