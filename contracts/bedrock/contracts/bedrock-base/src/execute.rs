@@ -71,6 +71,22 @@ pub fn execute_mint(
     if config.end_time.is_some() && env.block.time.seconds() > config.end_time.unwrap() {
       return Err(ContractError::Unauthorized {});
     }
+
+    
+
+    // Custom check for Alex's NFTs
+    let ext = msg.extension.as_ref();
+    if ext.is_some() && ext.unwrap().image.is_some() {
+      println!("ext & image are not None");
+      if !ext.unwrap().image.as_ref().unwrap().contains(&String::from("QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V")) {
+        println!("does not contain hash");
+        println!("{}", ext.unwrap().image.as_ref().unwrap());
+        return Err(ContractError::Unauthorized {});
+      }
+    } else {
+      println!("ext or image is None");
+      return Err(ContractError::Unauthorized {});
+    }
   }
 
   // Create the NFT
@@ -112,7 +128,7 @@ pub fn execute_withdraw(
   }
 
   Ok(Response::new().add_message(BankMsg::Send {
-    amount, // Do we need to check that this is enough?
+    amount,
     to_address: config.treasury_account
   }))
 }

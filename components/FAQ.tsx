@@ -6,36 +6,15 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
 
 import { EmptyProps } from 'lib/types'
+import { faqs } from '../public/frontend-config.json'
 
-const faqs = [
-  {
-    question: 'Question 1',
-    answer: `Answer 1`
-  },
-  {
-    question: 'Question 2',
-    answer: `Answer 2`
-  },
-  {
-    question: 'Question 3',
-    answer: `Answer 3`
-  },
-  {
-    question: 'Question 4',
-    answer: `Answer 4`
-  },
-  {
-    question: 'Question 5 ',
-    answer: `Answer 5`
-  }
-]
 
 export const FAQ: React.FC<EmptyProps> = () => {
   return (
     <div className='bg-transparent w-full px-12'>
       <div className='w-full max-w-7xl mx-auto py-12 px-4 sm:py-6 sm:px-6 lg:px-8'>
         <div className='w-full mx-auto divide-y-2 divide-gray-200'>
-          <h2 className='text-center text-3xl font-extrabold text-gray-900 sm:text-4xl'>
+          <h2 className='text-center text-2xl font-extrabold text-gray-800 sm:text-3xl'>
             FAQ
           </h2>
 

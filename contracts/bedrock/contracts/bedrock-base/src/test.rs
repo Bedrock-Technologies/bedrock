@@ -9,7 +9,7 @@ mod tests {
     use cw721_base::MintMsg;
     use cw721_base::state::Cw721Contract;
     use bedrock::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-    use bedrock::state::{Extension/*, Metadata*/};
+    use bedrock::state::{Extension, Metadata, Trait};
 
     const CREATOR: &str = "creator";
     const PUBLIC: &str = "public";
@@ -40,8 +40,18 @@ mod tests {
         let mint_msg = MintMsg {
             token_id: token_id.to_string(),
             owner: OWNER.to_string(),
-            token_uri: Some("uri".to_string()), 
-            extension: None,
+            token_uri: None, 
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
         let exec_msg = ExecuteMsg::Mint(mint_msg.clone());
         execute(deps.as_mut(), mock_env(), mint_info, exec_msg).unwrap();
@@ -128,6 +138,49 @@ mod tests {
     }
 
     #[test]
+    fn mint_alex() {
+        let mut deps = mock_dependencies(&[]);
+
+        let info = mock_info(CREATOR, &[]);
+        let init_msg = InstantiateMsg {
+            name: "SpaceShips".to_string(),
+            symbol: "SPACE".to_string(),
+            max_token_count: 1, 
+            treasury_account: CREATOR.to_string(), 
+            is_mint_public: true, 
+            start_time: None, 
+            end_time: None,
+            price: None,
+        };
+
+        instantiate(deps.as_mut(), mock_env(), info.clone(), init_msg).unwrap();
+
+        let token_id = "1-1";
+        let mint_info = mock_info(OWNER, &[]);
+        let mint_msg = MintMsg {
+            token_id: token_id.to_string(),
+            owner: OWNER.to_string(),
+            token_uri: None, 
+            extension: Some( Metadata {
+                image: Some("ipfs://wrong_hash/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
+        };
+
+        let exec_msg = ExecuteMsg::Mint(mint_msg.clone());
+        let res = execute(deps.as_mut(), mock_env(), mint_info.clone(), exec_msg);
+
+        assert_eq!(ContractError::Unauthorized {}, res.unwrap_err());
+    }
+
+    #[test]
     fn mint_funds() {
         let mut deps = mock_dependencies(&[]);
 
@@ -145,7 +198,7 @@ mod tests {
 
         instantiate(deps.as_mut(), mock_env(), info.clone(), init_msg).unwrap();
 
-        let token_ids = ["Enterprise", "Falcon"];
+        let token_ids = ["1-1", "1-2"];
         let coins = [coin(1_000_000, "uluna")];
         let success_info = mock_info(OWNER, &coins);
         let failure_info = mock_info(OWNER, &[]);
@@ -155,7 +208,17 @@ mod tests {
             token_id: token_ids[0].to_string(),
             owner: OWNER.to_string(),
             token_uri: None, 
-            extension: None,
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
         let exec_msg = ExecuteMsg::Mint(mint_msg1);
         let res = execute(deps.as_mut(), mock_env(), success_info, exec_msg.clone());
@@ -166,7 +229,17 @@ mod tests {
             token_id: token_ids[1].to_string(),
             owner: OWNER.to_string(),
             token_uri: None, 
-            extension: None,
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
         let exec_msg = ExecuteMsg::Mint(mint_msg2);
         let res = execute(deps.as_mut(), mock_env(), failure_info.clone(), exec_msg.clone());
@@ -198,7 +271,17 @@ mod tests {
             token_id: token_id.to_string(),
             owner: OWNER.to_string(),
             token_uri: None, 
-            extension: None,
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
         let exec_msg = ExecuteMsg::Mint(mint_msg);
         let mint_info = mock_info(OWNER, &[]);
@@ -249,7 +332,17 @@ mod tests {
             token_id: token_id.to_string(),
             owner: OWNER.to_string(),
             token_uri: None, 
-            extension: None,
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
         let exec_msg = ExecuteMsg::Mint(mint_msg);
         execute(deps.as_mut(), mock_env(), mint_info, exec_msg.clone()).unwrap();
@@ -351,10 +444,20 @@ mod tests {
         let token_id = "Enterprise";
         let mint_info = mock_info(OWNER, &[]);
         let mint_msg = MintMsg {
-            token_id: token_id.to_string(),
-            owner: OWNER.to_string(),
+            token_id: token_id.into(),
+            owner: OWNER.into(),
             token_uri: None, 
-            extension: None,
+            extension: Some( Metadata {
+                image: Some("ipfs://QmQwkiEyiCuuHXGnfaXfsWRAuKRJZbiTP1yf1qXzYwHC6V/1.png".to_string()),
+                image_data: None,
+                external_url: None,
+                description: None,
+                name: Some("Token1-1".to_string()),
+                attributes: Some(vec!( Trait { trait_type: "Room".to_string(), value: "1".to_string(), display_type: None })),
+                background_color: None,
+                animation_url: None,
+                youtube_url: None,
+            }),
         };
 
         let exec_msg = ExecuteMsg::Mint(mint_msg.clone());
