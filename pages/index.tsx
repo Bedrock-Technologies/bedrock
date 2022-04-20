@@ -56,7 +56,10 @@ export default function Index() {
   }, [connectedWallet])
 
   const handleClickMint = async (mintCount: number) => {
-    if (connectedWallet && typeof tokensLoaded !== 'undefined') {
+    if (!connectedWallet) {
+      toast.warn('Please connect wallet')
+    }
+    if (typeof tokensLoaded !== 'undefined') {
       const token_ids = await toast.promise(
         mint(connectedWallet, cacheContent as CacheContent, mintCount),
         {
