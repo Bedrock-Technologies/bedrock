@@ -6,13 +6,22 @@ async function handleErrors(response: Response) {
   return response
 }
 
-const get = (endpoint: string): Promise<Response> => {
+const get = (
+  endpoint: string,
+  body: Record<string, unknown> | undefined 
+): Promise<Response> => {
   if (endpoint.startsWith('/')) {
     endpoint = endpoint.slice(1)
   }
 
   // TODO urlencode params
-  return fetch(`/api/${endpoint}`).then(handleErrors)
+  return fetch(`/api/${endpoint}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(handleErrors)
 }
 
 const post = (

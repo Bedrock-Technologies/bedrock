@@ -18,18 +18,35 @@ import router from 'next/router'
 
 import { title } from '../public/frontend-config.json'
 import cacheContent from '../lib/cache.json'
-import { getNumTokens, getMyTokens } from 'lib/utils/getTokens'
 import { getClient } from 'lib/utils/getClient'
 import { LCDClient } from '@terra-money/terra.js'
 import { MyTokens } from 'components/MyTokens'
+import api from 'lib/utils/api-client'
 
 
-const loadNumTokens = async (lcd: LCDClient, setter: any) => {
-  setter(await getNumTokens(lcd, cacheContent.contract_addr))
+const loadNumTokens = async (setter: any) => {
+  api.get('numTokens', { 
+    chainId: cacheContent.chain_id,
+    contract_address: cacheContent.contract_addr,
+  })
+  .then((res) => res.json())
+  .then(setter)
+  .catch((error) => {
+    console.error(error)
+  })
 }
 
-const loadMyTokens = async (lcd: LCDClient, owner: string, setter: any) => {
-  setter(await getMyTokens(lcd, cacheContent.contract_addr, owner))
+const loadMyTokens = async (owner: string, setter: any) => {
+  api.get('numTokens', { 
+    chainId: cacheContent.chain_id,
+    contract_address: cacheContent.contract_addr,
+    owner: owner,
+  })
+  .then((res) => res.json())
+  .then(setter)
+  .catch((error) => {
+    console.error(error)
+  })
 }
 
 export default function Index() {
@@ -42,8 +59,8 @@ export default function Index() {
     const loadTokens = async (_connectedWallet: ConnectedWallet) => {
       try {
         const lcd = await getClient(_connectedWallet.network.chainID || 'columbus-5')
-        loadNumTokens(lcd, setTokensLoaded)
-        loadMyTokens(lcd, _connectedWallet.walletAddress, setMyTokens)
+        loadNumTokens(setTokensLoaded)
+        loadMyTokens(_connectedWallet.walletAddress, setMyTokens)
       } catch (error) {
         console.log("Error while loading tokens...")
         console.log(error)
