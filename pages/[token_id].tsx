@@ -12,9 +12,6 @@ import { NftInfoResponse, OwnerOf } from 'lib/types'
 import cacheContent from '../lib/cache.json'
 import { getClient } from '../lib/utils/getClient'
 
-const isProperImage = (imageUri: string) =>
-  imageUri.startsWith('http://') || imageUri.startsWith('https://')
-
 export default function Index() {
   const { status, availableConnections, connect, disconnect } = useWallet()
   const connectedWallet = useConnectedWallet()
@@ -34,7 +31,7 @@ export default function Index() {
   }
 
   function renderImage() {
-    const imageUrl = nftInfo?.extension?.image
+    const imageUrl = cacheContent.image_cache ? `/images/${token_id}.png` : nftInfo?.extension?.image 
     if (!imageUrl) {
       return (
         <Image
@@ -46,16 +43,15 @@ export default function Index() {
         />
       )
     }
-    if (isProperImage(imageUrl))
-      return (
-        <Image
-          alt='nft logo'
-          src={imageUrl}
-          height='400'
-          width='400'
-          className={imageStyle}
-        />
-      )
+    return (
+      <Image
+        alt='nft logo'
+        src={imageUrl}
+        height='400'
+        width='400'
+        className={imageStyle}
+      />
+    )
   }
 
   function render() {
