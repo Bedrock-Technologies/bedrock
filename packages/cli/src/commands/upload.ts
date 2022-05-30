@@ -174,7 +174,7 @@ const createContract = async (
 
   const instantiateTx = await wallet.createAndSignTx({
     msgs: [instantiate],
-    sequence: (await wallet.accountNumberAndSequence()).sequence + 1
+    sequence: (await wallet.accountNumberAndSequence()).sequence 
   })
   const instantiateTxResult = await terra.tx.broadcast(instantiateTx)
 
